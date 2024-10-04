@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporizador</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+        }
+        #temporizador {
+            display: flex;
+            font-size: 150px;
+            align-items: center;
+            justify-content: space-evenly;
+
+            height: 95vh;
+        }
+
+        #temporizador p{
+            text-align: center;
+            margin-right: 20%;
+            font-family: system-ui;
+            font-size: 25px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div id="temporizador">
+        <div>
+            <p>Dia(s)</p>
+            <div id="dias"></div>
+        </div>
+        <div>
+            <p>Horas(s)</p>
+            <div id="horas"></div>
+        </div>
+        <div>
+            <p>Minutos(s)</p>
+            <div id="minutos"></div>
+        </div>
+        <div>
+            <p>Segundos(s)</p>
+            <div id="segundos"></div>
+        </div>
+    </div>
+    <script src="./exercicio.js"></script>
+</body>
+</html>
