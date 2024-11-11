@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twiter 2</title>
+    <style>
+        #campo-De-Postagem{
+            display: flex;
+            justify-content: center;
+        }
+
+        #campo-De-Postagem textarea{
+            border-style: none;
+            outline: none;
+            border-radius: 10px;
+            width: 30%;
+            height: 60px;
+            margin-right: 25px;
+
+            padding: 15px;
+            background-color: rgb(245, 245, 245);
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
+        }
+
+        #publicar-Postagem{
+            border-style: none;
+            border-radius: 10px;
+            width: 100px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
+
+            transition: 0.4s ease;
+        }
+
+        #publicar-Postagem:hover{
+            width: 110px;
+            background-color: rgba(0, 98, 255, 0.516);
+            color: white;
+        }
+
+        #postagens{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Verdana;
+        }
+
+        .postagem{
+            display: flex;
+            flex-direction: column;
+            word-wrap: break-word;
+            padding: 20px;
+            width: 40%;
+            border-radius: 20px;
+            background-color:white;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            margin: 15px;
+        }
+
+        .imagem-Postagem{
+            width: 100%;
+            max-height: 500px;
+            margin-bottom: 15px;
+        }
+
+        .avatar{
+            align-self: center;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+        }
+
+        .name-Bar{
+            display: flex;
+        }
+
+        .name-Bar img{
+            margin-right: 20px;
+        }
+
+        .campo-De-Curtida{
+            display: flex;
+        }
+
+        .botao-Curtir{
+            font-size: 17px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 10px;
+            border-style: none;
+            width: 70px;
+
+            margin-right: 15px;
+            transition: 0.4s ease;
+        }
+
+        .botao-Curtir:hover{
+            width: 75px;
+            background-color: rgba(255, 0, 0, 0.748);
+            color: white;
+        }
+
+        .data{
+            margin-top: 30px;
+            font-size: 13px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+        }
+    </style>
+</head>
+<body>
+    <div id="campo-De-Postagem">
+        <textarea placeholder="Texto da publicação" name="fazer-Postagens"></textarea>
+        <button id="publicar-Postagem">Publicar</button>
+    </div>
+    <section id="postagens"></section>
+
+    <script>
+        function nomeDoMes(){
+            const dataAtual = new Date();
+            const mes = dataAtual.getMonth();
+
+            let nomeDoMes;
+
+            switch(mes) {
+            case 0:
+                nomeDoMes = 'Janeiro';
+                break;
+            case 1:
+                nomeDoMes = 'Fevereiro';
+                break;
+            case 2:
+                nomeDoMes = 'Março';
+                break;
+            case 3:
+                nomeDoMes = 'Abril';
+                break;
+            case 4:
+                nomeDoMes = 'Maio';
+                break;
+            case 5:
+                nomeDoMes = 'Junho';
+                break;
+            case 6:
+                nomeDoMes = 'Julho';
+                break;
+            case 7:
+                nomeDoMes = 'Agosto';
+                break;
+            case 8:
+                nomeDoMes = 'Setembro';
+                break;
+            case 9:
+                nomeDoMes = 'Outubro';
+                break;
+            case 10:
+                nomeDoMes = 'Novembro';
+                break;
+            case 11:
+                nomeDoMes = 'Dezembro';
+                break;
+            }
+            return nomeDoMes;
+        }
+
+        /*Carregando items anteriormente postados*/
+        for(let i = localStorage.length - 1; i >= 0; i--){
+            let postagem = JSON.parse(localStorage.getItem(i));
+            let publicacao = document.createElement('div');
+            publicacao.classList.add('postagem');
+            publicacao.innerHTML = postagem.html;
+            document.getElementById('postagens').appendChild(publicacao);
+
+            document.getElementById(`curtir-${i}`).addEventListener('click', function () {
+                postagem.curtidas += 1;
+                document.getElementById(`curtidas-${i}`).textContent = `${postagem.curtidas} Curtidas`;
+                localStorage.setItem(i, JSON.stringify(postagem));
+            })
+        
+            /*atualizado as curtidas*/
+            document.getElementById(`curtidas-${i}`).textContent = `${postagem.curtidas} Curtidas`;
+        };
+
+        document.getElementById('publicar-Postagem').addEventListener('click', async function(){
+            let avatar = 'https://i.postimg.cc/Zn35xHzN/Eu.jpg';
+            let texto = document.getElementsByName('fazer-Postagens')[0].value;
+            let resposta = await fetch('https://api.thecatapi.com/v1/images/search');
+            let dados = await resposta.json();
+            let imagemDoGato = dados[0].url;
+            let n_curtidas = 0
+            let data = new Date()
+
+            /*Resetando input*/
+            document.getElementsByName('fazer-Postagens')[0].value = ''
+
+            /*Salvando conteudo da postagem*/
+            let conteudoDaPostagem = JSON.stringify({
+                html:`<div class = "name-Bar">
+                        <img src= ${avatar} class= 'avatar' width= "40">
+                        <h3>Pedro Henrique</h3>
+                    </div>
+                    <p>${texto}</p>
+                    <img src="${imagemDoGato}" class = 'imagem-Postagem'>
+                    <div class = "campo-De-Curtida">
+                        <button class= 'botao-Curtir' id='curtir-${localStorage.length}'>Curtir</button>
+                        <p id='curtidas-${localStorage.length}'>${n_curtidas} Curtidas</p>
+                    </div>
+                    <p class= 'data'>${data.getDate()} de ${nomeDoMes()} de ${data.getFullYear()} às ${data.getHours()}:${data.getMinutes()}</p>`,
+                curtidas: n_curtidas
+            })
+    
+            /*Salvando ao local Storage*/
+            localStorage.setItem(localStorage.length, conteudoDaPostagem);
+
+            /*Aplicando conteúdo à página*/
+            let postagem = JSON.parse(conteudoDaPostagem);
+            let publicacao = document.createElement('div');
+            publicacao.classList.add('postagem');
+            publicacao.innerHTML = postagem.html;
+            document.getElementById('postagens').prepend(publicacao);
+
+            document.getElementById(`curtir-${localStorage.length - 1}`).addEventListener('click', function () {
+                postagem.curtidas += 1;
+                document.getElementById(`curtidas-${localStorage.length - 1}`).textContent = `Curtidas: ${postagem.curtidas}`;
+                localStorage.setItem(localStorage.length - 1, JSON.stringify(postagem));
+            });
+        })
+    </script>
+</body>
+</html>
