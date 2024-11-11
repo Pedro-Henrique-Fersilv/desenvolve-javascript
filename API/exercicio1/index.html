@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca Usuários</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <input type="text" placeholder="Nome do usuário" name="usuarioBuscado">
+    <button id="buscarUsuario">Buscar</button>
+    <div id="listaDeUsuariosEncontrados"></div>
+
+    <script>
+        async function buscaUsuario(usuarioBuscado){
+            const usuario = await fetch(`https://api.github.com/users/${usuarioBuscado}`);
+            const dados = await usuario.json();
+            return dados;
+        }
+
+        document.getElementById('buscarUsuario').addEventListener('click', async function(){
+            /*Pegando usuario buscado pelo input*/
+            let usuarioBuscado = document.getElementsByName('usuarioBuscado')[0].value;
+
+            let dadosUsuarioBuscado = await buscaUsuario(usuarioBuscado);
+
+            console.log(dadosUsuarioBuscado)
+
+            if(dadosUsuarioBuscado.message === 'Not Found'){
+                document.getElementById('listaDeUsuariosEncontrados').innerHTML = '<p>Não foram encontrados usuários para esta pesquisa</p>';
+            }else{
+                document.getElementById('listaDeUsuariosEncontrados').innerHTML = `<p>Usuário encontrado: ${dadosUsuarioBuscado.login}</p>`;
+            }
+        });
+
+    </script>
+</body>
+</html>
